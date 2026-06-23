@@ -1,0 +1,72 @@
+# ================================
+# GCJ Official Website - Backend Requirements
+# Django 5.x + DRF + JWT + SQLite/MySQL
+# ================================
+
+# Core Django
+Django==5.1.4
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.1
+
+# Database
+# mysqlclient==2.2.4  # Uncomment for MySQL production
+
+# CORS
+django-cors-headers==4.6.0
+
+# Environment
+python-dotenv==1.0.1
+
+# Image handling
+Pillow==11.1.0
+
+# Task Queue
+celery==5.4.0
+redis==5.2.1
+django-celery-beat==2.7.0
+django-celery-results==2.5.1
+
+# Filtering & Search
+django-filter==24.3
+
+# AI / ML — Core FYP Feature
+scikit-learn>=1.4.0
+pandas>=2.2.0
+numpy>=1.26.0
+
+# AI Chatbot (new google-genai package)
+google-genai>=0.8.0
+
+# PDF Generation (Result download)
+reportlab>=4.2.0
+
+# Storage
+django-storages==1.14.4
+boto3==1.35.95
+
+# Security
+django-ratelimit==4.1.0
+cryptography==44.0.0
+argon2-cffi==23.1.0
+
+# API Documentation
+drf-spectacular==0.27.2
+
+# Admin UI — Enterprise Grade
+jazzmin==3.0.1
+
+# Utilities
+python-dateutil==2.9.0.post0
+pytz==2024.2
+requests==2.32.3
+Markdown==3.7
+whitenoise==6.8.2
+
+# Production
+gunicorn==23.0.0
+sentry-sdk==2.19.2
+
+# Testing
+pytest==8.3.4
+pytest-django==4.9.0
+factory-boy==3.3.1

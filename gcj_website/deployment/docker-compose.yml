@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: gcj_mysql_db
+    restart: always
+    command: [
+      "mysqld",
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      "--max-connections=1000"
+    ]
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ../database/seed_data.sql:/docker-entrypoint-initdb.d/2-seed_data.sql
+    networks:
+      - gcj_network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: gcj_redis
+    restart: always
+    command: ["redis-server", "--maxmemory-policy", "allkeys-lru"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - gcj_network
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../deployment/Dockerfile.backend
+    container_name: gcj_django_backend
+    restart: always
+    depends_on:
+      - db
+      - redis
+    environment:
+      # Django
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_DEBUG: ${DJANGO_DEBUG}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+
+      # MySQL
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 3306
+
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+
+      # Auth / JWT
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_ACCESS_TOKEN_LIFETIME_MINUTES: ${JWT_ACCESS_TOKEN_LIFETIME_MINUTES}
+      JWT_REFRESH_TOKEN_LIFETIME_DAYS: ${JWT_REFRESH_TOKEN_LIFETIME_DAYS}
+
+      # Gemini
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+
+      # Frontend origin
+      FRONTEND_URL: ${FRONTEND_URL}
+
+    ports:
+      - "8000:8000"
+    networks:
+      - gcj_network
+
+    # Run migrations + collectstatic then gunicorn
+    command: >
+      bash -c "python gcj_backend/manage.py migrate &&
+               python gcj_backend/manage.py collectstatic --noinput &&
+               gunicorn --bind 0.0.0.0:8000 gcj_backend.wsgi:application
+               --workers=${GUNICORN_WORKERS:-4}
+               --threads=${GUNICORN_THREADS:-2}
+               --timeout=${GUNICORN_TIMEOUT:-120}
+               --graceful-timeout=${GUNICORN_GRACEFUL_TIMEOUT:-30}
+               --worker-tmp-dir=/dev/shm"
+
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../deployment/Dockerfile.frontend
+    container_name: gcj_react_frontend
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    networks:
+      - gcj_network
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: gcj_nginx_proxy
+    restart: always
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - gcj_network
+
+
+  # Note: We are using Redis at the app layer and Nginx rate limiting.
+  # Connection pooling is handled by keeping gunicorn workers moderate and relying on MySQL server.
+  # If you choose to add pgbouncer-like pooling for MySQL later, swap this compose section.
+
+networks:
+  gcj_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+

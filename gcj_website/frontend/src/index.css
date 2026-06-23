@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* Brand colors */
+  --color-gold-50: #fefce8;
+  --color-gold-100: #fef9c3;
+  --color-gold-200: #fef08a;
+  --color-gold-300: #fde047;
+  --color-gold-400: #facc15;
+  --color-gold-500: #d4af37; /* Core GCJ Academic Gold */
+  --color-gold-600: #ca8a04;
+  --color-gold-700: #a16207;
+  --color-gold-800: #854d0e;
+  --color-gold-900: #713f12;
+
+  /* Theme variables - LIGHT MODE (Default) */
+  --bg-color: #f8fafc;
+  --bg-gradient-from: #f1f5f9;
+  --bg-gradient-to: #e2e8f0;
+  
+  --text-main: #0f172a;       /* slate-900 */
+  --text-muted: #475569;      /* slate-600 */
+  --text-light: #64748b;      /* slate-500 */
+  --text-white: #ffffff;
+  
+  --primary-color: #0f2c59;   /* Classic Navy Blue */
+  --primary-hover: #1e3a8a;
+  --primary-light: rgba(15, 44, 89, 0.1);
+  --primary-glow: rgba(15, 44, 89, 0.15);
+
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(15, 44, 89, 0.08);
+  --card-shadow: 0 10px 30px -10px rgba(15, 44, 89, 0.1);
+
+  --navbar-bg: rgba(255, 255, 255, 0.8);
+  --footer-bg: #0b132b;       /* Dark footer even in light mode for contrast */
+  
+  --ticker-bg: #0f2c59;
+  --ticker-text: #ffffff;
+  
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+/* Theme variables - DARK MODE */
+html.dark {
+  --bg-color: #030712;        /* slate-950 */
+  --bg-gradient-from: #080f25;
+  --bg-gradient-to: #030712;
+  
+  --text-main: #f3f4f6;       /* gray-100 */
+  --text-muted: #9ca3af;      /* gray-400 */
+  --text-light: #6b7280;      /* gray-500 */
+  --text-white: #ffffff;
+  
+  --primary-color: #1e40af;   /* Vibrant Navy/Blue */
+  --primary-hover: #2563eb;
+  --primary-light: rgba(30, 64, 175, 0.2);
+  --primary-glow: rgba(30, 64, 175, 0.3);
+
+  --card-bg: rgba(17, 24, 39, 0.7); /* gray-900 / 0.7 */
+  --card-border: rgba(255, 255, 255, 0.05);
+  --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+
+  --navbar-bg: rgba(3, 7, 18, 0.8);
+  --footer-bg: #02040a;
+  
+  --ticker-bg: #080f25;
+  --ticker-text: #f3f4f6;
+  
+  --scrollbar-track: #030712;
+  --scrollbar-thumb: #1f2937;
+  --scrollbar-thumb-hover: #374151;
+}
+
+@theme {
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  
+  /* Bind CSS theme variables to Tailwind theme names */
+  --color-brand-gold: var(--color-gold-500);
+  --color-gold-50: var(--color-gold-50);
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-200: var(--color-gold-200);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-700: var(--color-gold-700);
+  --color-gold-800: var(--color-gold-800);
+  --color-gold-900: var(--color-gold-900);
+  
+  --color-theme-bg: var(--bg-color);
+  --color-theme-text: var(--text-main);
+  --color-theme-muted: var(--text-muted);
+  --color-theme-light: var(--text-light);
+  --color-theme-primary: var(--primary-color);
+  --color-theme-primary-hover: var(--primary-hover);
+  --color-theme-primary-light: var(--primary-light);
+  --color-theme-card: var(--card-bg);
+  --color-theme-border: var(--card-border);
+  --color-theme-navbar: var(--navbar-bg);
+  --color-theme-footer: var(--footer-bg);
+}
+
+/* Base custom resets */
+html, body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Premium navy-blue subtle glow glassmorphism */
+.glass-navy {
+  background: rgba(15, 44, 89, 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(15, 44, 89, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(15, 44, 89, 0.05);
+}
+
+html.dark .glass-navy {
+  background: rgba(30, 64, 175, 0.08);
+  border: 1px solid rgba(30, 64, 175, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Micro-animations and utility effects */
+.hover-gold-glow:hover {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+  border-color: var(--color-gold-500);
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, #ffffff 30%, var(--color-gold-400) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html.dark .gradient-text-gold {
+  background: linear-gradient(135deg, #ffffff 40%, var(--color-gold-300) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-navy-gold {
+  background: linear-gradient(135deg, var(--primary-color) 45%, var(--color-gold-600) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html.dark .gradient-text-navy-gold {
+  background: linear-gradient(135deg, #60a5fa 30%, var(--color-gold-400) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-navy-gold-grad {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #0b132b 100%);
+}
+
+.bg-gold-grad {
+  background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-600) 100%);
+}
